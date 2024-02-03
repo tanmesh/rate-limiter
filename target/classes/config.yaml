@@ -1,0 +1,10 @@
+rateLimiter:
+  tokenBucket:
+    tokensPerSecond: 1
+    maxTokens: 10
+  FixedCounterWindow:
+    tokensPerSecond: 1
+    maxTokens: 10
+  SlidingCounterWindow:
+    tokensPerSecond: 1
+    maxTokens: 10
