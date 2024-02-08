@@ -2,19 +2,15 @@ package org.rateLimiter.policy;
 
 import org.rateLimiter.service.RedisService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class SlidingCounterWindowAlgorithm implements RateLimiter {
+public class SlidingWindowLogAlgorithm implements RateLimiter {
     private final int maxBucketSize;
     private long windowStart;
     private final int windowSize;
     private RedisService redisService;
 
-    public SlidingCounterWindowAlgorithm(int bucketSize, int windowSize) {
+    public SlidingWindowLogAlgorithm(int bucketSize, int windowSize) {
         this.maxBucketSize = bucketSize;
         this.windowStart = System.nanoTime();
         this.windowSize = windowSize;
