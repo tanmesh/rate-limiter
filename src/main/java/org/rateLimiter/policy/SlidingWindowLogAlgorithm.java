@@ -18,7 +18,7 @@ public class SlidingWindowLogAlgorithm implements RateLimiter {
     }
 
     @Override
-    public boolean allowRequest(String ipAddress) {
+    synchronized public boolean allowRequest(String ipAddress) {
         Bucket bucket = redisService.get(ipAddress);
         if (bucket == null) {
             bucket = new Bucket(maxBucketSize);

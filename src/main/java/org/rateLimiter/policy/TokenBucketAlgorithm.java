@@ -19,7 +19,6 @@ public class TokenBucketAlgorithm implements RateLimiter {
         this.refillRate = refillRate;
         this.maxBucketSize = bucketSize;
         this.redisService = new RedisService();
-//        this.bucketMap = new ConcurrentHashMap<>();
     }
 
     @Override

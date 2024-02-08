@@ -5,6 +5,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.rateLimiter.config.Configurations;
+import org.rateLimiter.policy.FixedCounterWindowAlgorithm;
 import org.rateLimiter.policy.RateLimiter;
 import org.rateLimiter.policy.SlidingWindowLogAlgorithm;
 import org.rateLimiter.resource.RateLimiterResource;
@@ -48,7 +49,7 @@ public class Main extends Application<Configurations> {
 
 //        rateLimiter = new TokenBucketAlgorithm(1, 10);
 //        rateLimiter = new FixedCounterWindowAlgorithm(10, 20);
-        rateLimiter = new SlidingWindowLogAlgorithm(10, 60);
+        rateLimiter = new SlidingWindowLogAlgorithm(10, 20);
 
         IRateLimiterService rateLimiterService = new RateLimiterService(rateLimiter);
 
