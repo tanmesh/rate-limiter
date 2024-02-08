@@ -1,5 +1,9 @@
 package org.rateLimiter.policy;
 
+import org.rateLimiter.service.IRateLimiterService;
+import org.rateLimiter.service.RateLimiterService;
+import org.rateLimiter.service.RedisService;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,17 +13,18 @@ import static java.lang.Math.min;
 public class TokenBucketAlgorithm implements RateLimiter {
     private final int refillRate;
     private final double maxBucketSize;
-    public Map<String, Bucket> bucketMap;
+    private RedisService redisService;
 
     public TokenBucketAlgorithm(int refillRate, int bucketSize) {
         this.refillRate = refillRate;
         this.maxBucketSize = bucketSize;
-        this.bucketMap = new ConcurrentHashMap<>();
+        this.redisService = new RedisService();
+//        this.bucketMap = new ConcurrentHashMap<>();
     }
 
     @Override
     synchronized public boolean allowRequest(String ipAddress) {
-        Bucket bucket = bucketMap.get(ipAddress);
+        Bucket bucket = redisService.get(ipAddress);
         if(bucket == null) {
             bucket = new Bucket(maxBucketSize);
         }
@@ -31,11 +36,12 @@ public class TokenBucketAlgorithm implements RateLimiter {
         if (currentBucketSize > 0) {
             bucket.setCurrentBucketSize(currentBucketSize - 1);
 
-            bucketMap.put(ipAddress, bucket);
+            redisService.add(ipAddress, bucket);
+
             return true;
         }
 
-        bucketMap.put(ipAddress, bucket);
+        redisService.add(ipAddress, bucket);
         return false;
     }
 

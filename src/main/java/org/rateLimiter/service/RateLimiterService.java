@@ -4,9 +4,11 @@ import org.rateLimiter.policy.RateLimiter;
 
 public class RateLimiterService implements IRateLimiterService {
     private RateLimiter rateLimiter;
+    private IRedisService redisService;
 
     public RateLimiterService(RateLimiter rateLimiter) {
         this.rateLimiter = rateLimiter;
+        this.redisService = new RedisService();
     }
 
     @Override

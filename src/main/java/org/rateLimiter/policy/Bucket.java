@@ -8,6 +8,9 @@ public class Bucket {
     private double currentBucketSize;
     private List<Long> timestamps;
 
+    public Bucket() {
+    }
+
     public Bucket(double bucketSize) {
         this.lastRefillTimestamp = System.nanoTime();
         this.currentBucketSize = bucketSize;

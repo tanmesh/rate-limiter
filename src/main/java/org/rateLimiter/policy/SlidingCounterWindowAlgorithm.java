@@ -1,5 +1,7 @@
 package org.rateLimiter.policy;
 
+import org.rateLimiter.service.RedisService;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,23 +10,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SlidingCounterWindowAlgorithm implements RateLimiter {
     private final int maxBucketSize;
-
     private long windowStart;
     private final int windowSize;
-
-    public ConcurrentHashMap<String, Bucket> bucketMap;
+    private RedisService redisService;
 
     public SlidingCounterWindowAlgorithm(int bucketSize, int windowSize) {
         this.maxBucketSize = bucketSize;
-        this.bucketMap = new ConcurrentHashMap<>();
         this.windowStart = System.nanoTime();
         this.windowSize = windowSize;
-
+        this.redisService = new RedisService();
     }
 
     @Override
     public boolean allowRequest(String ipAddress) {
-        Bucket bucket = bucketMap.get(ipAddress);
+        Bucket bucket = redisService.get(ipAddress);
         if (bucket == null) {
             bucket = new Bucket(maxBucketSize);
         }
@@ -37,11 +36,11 @@ public class SlidingCounterWindowAlgorithm implements RateLimiter {
         if (currentBucketSize < maxBucketSize) {
             timestamps.add(System.nanoTime());
             bucket.setTimestamps(timestamps);
-            bucketMap.put(ipAddress, bucket);
+            redisService.add(ipAddress, bucket);
             return true;
         }
 
-        bucketMap.put(ipAddress, bucket);
+        redisService.add(ipAddress, bucket);
         return false;
     }
 

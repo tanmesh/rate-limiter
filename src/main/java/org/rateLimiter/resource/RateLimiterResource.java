@@ -22,7 +22,7 @@ public class RateLimiterResource {
     @Path("/limited")
     @Produces(MediaType.APPLICATION_JSON)
     public Response limited(@Context HttpServletRequest request) {
-        String ipAddress = request.getRemoteAddr();
+        String ipAddress = request.getRemoteAddr() + "-" + request.getServerPort();
         String responseString;
         try {
             responseString = rateLimiterService.limited(ipAddress);

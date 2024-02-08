@@ -1,5 +1,7 @@
 package org.rateLimiter.policy;
 
+import org.rateLimiter.service.RedisService;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,23 +10,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FixedCounterWindowAlgorithm implements RateLimiter {
     private final int maxBucketSize;
-
     private long windowStart;
-
     private final int windowSize;
-
-    public Map<String, Bucket> bucketMap;
+    private RedisService redisService;
 
     public FixedCounterWindowAlgorithm(int bucketSize, int windowSize) {
         this.maxBucketSize = bucketSize;
-        this.bucketMap = new ConcurrentHashMap<>();
         this.windowStart = System.nanoTime();
         this.windowSize = windowSize;
+        this.redisService = new RedisService();
     }
 
     @Override
     public boolean allowRequest(String ipAddress) {
-        Bucket bucket = bucketMap.get(ipAddress);
+        Bucket bucket = redisService.get(ipAddress);
         if (bucket == null) {
             bucket = new Bucket(maxBucketSize);
         }
@@ -35,11 +34,11 @@ public class FixedCounterWindowAlgorithm implements RateLimiter {
         double currentBucketSize = bucket.getCurrentBucketSize();
         if (currentBucketSize > 0) {
             bucket.setCurrentBucketSize(currentBucketSize - 1);
-            bucketMap.put(ipAddress, bucket);
+            redisService.add(ipAddress, bucket);
             return true;
         }
 
-        bucketMap.put(ipAddress, bucket);
+        redisService.add(ipAddress, bucket);
         return false;
     }
 
