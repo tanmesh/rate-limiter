@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FixedCounterWindowAlgorithm implements RateLimiter {
     private final int maxBucketSize;
@@ -16,7 +17,7 @@ public class FixedCounterWindowAlgorithm implements RateLimiter {
 
     public FixedCounterWindowAlgorithm(int bucketSize, int windowSize) {
         this.maxBucketSize = bucketSize;
-        this.bucketMap = new HashMap<>();
+        this.bucketMap = new ConcurrentHashMap<>();
         this.windowStart = System.nanoTime();
         this.windowSize = windowSize;
     }

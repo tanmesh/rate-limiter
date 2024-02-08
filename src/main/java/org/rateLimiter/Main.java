@@ -48,10 +48,9 @@ public class Main extends Application<Configurations> {
     public void run(Configurations configurations, Environment environment) {
         RateLimiter rateLimiter;
 
-//        rateLimiter = new TokenBucketAlgorithm(1, 10);
-//        rateLimiter = new FixedCounterWindowAlgorithm(10, 20);
-
-        rateLimiter = new SlidingCounterWindowAlgorithm(10, 20);
+        rateLimiter = new TokenBucketAlgorithm(1, 10);
+//        rateLimiter = new FixedCounterWindowAlgorithm(10, 60);
+//        rateLimiter = new SlidingCounterWindowAlgorithm(10, 60);
 
         IRateLimiterService rateLimiterService = new RateLimiterService(rateLimiter);
 

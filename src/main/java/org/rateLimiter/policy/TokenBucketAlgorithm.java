@@ -2,6 +2,7 @@ package org.rateLimiter.policy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.Math.min;
 
@@ -13,8 +14,7 @@ public class TokenBucketAlgorithm implements RateLimiter {
     public TokenBucketAlgorithm(int refillRate, int bucketSize) {
         this.refillRate = refillRate;
         this.maxBucketSize = bucketSize;
-
-        this.bucketMap = new HashMap<>();
+        this.bucketMap = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -41,7 +41,9 @@ public class TokenBucketAlgorithm implements RateLimiter {
 
     private void refill(Bucket bucket) {
         long now = System.nanoTime();
-        double tokenToAdd = (now - bucket.getLastRefillTimestamp()) * refillRate / 1e9;
+        long tokenToAdd = (long) ((now - bucket.getLastRefillTimestamp()) * refillRate / 1e9);
+
+        System.out.println("tokenToAdd: " + tokenToAdd);
 
         double currentBucketSize = bucket.getCurrentBucketSize();
         currentBucketSize = min(currentBucketSize + tokenToAdd, maxBucketSize);
