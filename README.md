@@ -14,6 +14,28 @@ of the system by preventing abuse, accidental overload, or deliberate attacks.
 
 ## REST APIs
 
+- **Unlimited request**
+  - GET
+  - Endpoint: `/unlimited`
+  - Request Header: ``` ```
+  - Request Body:
+    ```
+      Unlimited! Let's Go!
+    ```
+
+- **Limit request**
+  - GET
+  - Endpoint: `/limit`
+  - Request Header: ``` ```
+  - Request Body:  
+    ```
+      Limited, don't over use me!
+    ```
+    or
+    ```
+      Request is dropped
+    ```
+
 ## Postman configurations
 
 Load profile = Fixed \
@@ -74,3 +96,5 @@ Window size = 60 \
 Bucket size = 10
 ![img.png](src/main/resources/images/scwa_60_10.png)
  
+## Future Task
+- Adding Sliding window counter algorithm.
